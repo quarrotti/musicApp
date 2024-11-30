@@ -7,6 +7,7 @@ import org.example.musicApp.store.entities.aboutAudio.AudioEntity;
 import org.example.musicApp.store.entities.aboutAudio.PlaylistEntity;
 import org.example.musicApp.store.entities.aboutUser.Role;
 import org.example.musicApp.store.entities.common.ImageEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -30,10 +31,6 @@ public class UserDto {
 
     @NonNull
     String password;
-
-
-    ImageEntity image;
-
 
     List<AudioEntity> listOfAudios;
 

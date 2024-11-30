@@ -56,12 +56,15 @@
 <body>
 
 <h1>Регистрация</h1>
-<form action="/registry" method="POST">
+<form action="/registry" method="POST" enctype="multipart/form-data">
+    <input type="file" name="file" required>
     <input type="text" name="username" placeholder="Имя пользователя" required>
     <input type="email" name="email" placeholder="Электронная почта (будет использоваться как логин)" required>
     <input type="password" name="password" placeholder="Пароль" required>
     <button type="submit">Зарегистрироваться</button>
 </form>
+<div th:if="${errorMessage}" th:text="${errorMessage}"></div>
+<div th:if="${successMessage}" th:text="${successMessage}"></div>
 <div class="link-container">
     <p>Уже есть аккаунт? <a href="/login" style="color: #00BFFF;">Авторизоваться</a></p>
 </div>

@@ -1,5 +1,6 @@
 package org.example.musicApp.api.services;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.musicApp.store.entities.aboutUser.UserEntity;
 import org.example.musicApp.store.repositories.UserRepository;
@@ -21,6 +22,7 @@ public class MyUserDetailsService implements UserDetailsService {
         return userRepository.findByEmail(email);
     }
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserEntity user = findByEmail(email).orElseThrow(() ->
                 new UsernameNotFoundException(String
