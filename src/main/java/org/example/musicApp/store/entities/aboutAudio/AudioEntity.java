@@ -28,7 +28,11 @@ public class AudioEntity {
     HashSet<Genre> genres = new HashSet<>();
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinColumn
+    @JoinColumn(name = "user_id")
     UserEntity user;
+
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinColumn(name = "playlist_id")
+    PlaylistEntity playlist;
 
 }

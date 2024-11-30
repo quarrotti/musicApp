@@ -23,12 +23,11 @@ public class PlaylistEntity {
 
     String name;
 
-    @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinColumn
+    @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "playlist")
     List<AudioEntity> listOfAudios;
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER )
-    @JoinColumn
+    @JoinColumn(name = "user_id")
     UserEntity user;
 
     @ElementCollection(targetClass = Genre.class, fetch = FetchType.EAGER)

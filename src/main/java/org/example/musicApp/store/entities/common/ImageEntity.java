@@ -25,6 +25,6 @@ public class ImageEntity {
     byte[] data;
 
     @OneToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "user_id")
     UserEntity user;
 }

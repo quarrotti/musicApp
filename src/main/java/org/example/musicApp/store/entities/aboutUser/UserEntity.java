@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-@Table(name = "user")
+@Table(name = "app_user")
 @Entity
 @Getter
 @Setter
@@ -33,15 +33,12 @@ public class UserEntity {
     String password;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
-    @JoinColumn
     ImageEntity image;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
-    @JoinColumn
     List<AudioEntity> listOfAudios;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
-    @JoinColumn
     List<PlaylistEntity> listOfPlaylists;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)

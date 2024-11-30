@@ -29,9 +29,9 @@ public class UserService {
                 .username(userDto.getUsername())
                 .description(userDto.getDescription())
                 .image(userDto.getImage())
+                .roles(Set.of(Role.User))
                 .build();
 
-        userForSave.getRoles().add(Role.User);
         userRepository.save(userForSave);
     }
 }
