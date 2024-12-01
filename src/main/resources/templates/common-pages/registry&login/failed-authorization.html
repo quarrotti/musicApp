@@ -1,10 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ошибка авторизации - Music App</title>
+    <style>
+        body {
+            background-color: black;
+            color: #00BFFF; /* Голубой цвет */
+            font-family: 'Helvetica Neue', 'Arial', sans-serif; /* Похожий на Spotify шрифт */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+        button {
+            background-color: #00BFFF; /* Голубой цвет */
+            color: black;
+            border: none;
+            padding: 15px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0099CC; /* Темно-голубой цвет */
+        }
+        .link-container {
+            margin-top: 20px;
+            color: white;
+            text-align: center;
+        }
+        a {
+            color: #00BFFF;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
+
+<h1>Ошибка авторизации</h1>
+<p>К сожалению, ваши учетные данные неверны. Пожалуйста, попробуйте еще раз.</p>
+<div class="link-container">
+    <button onclick="window.location.href='/login'">Вернуться на страницу авторизации</button>
+    <p>Еще нет аккаунта? <a href="/registry">Зарегистрироваться</a></p>
+</div>
 
 </body>
 </html>
