@@ -8,6 +8,8 @@ import org.example.musicApp.store.entities.aboutUser.UserEntity;
 import org.example.musicApp.store.entities.common.ImageEntity;
 import org.example.musicApp.store.repositories.ImageRepository;
 import org.example.musicApp.store.repositories.UserRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -46,5 +50,13 @@ public class UserService {
         imageEntity.setUser (userForSave); // Связываем изображение с пользователем
 
         imageRepository.save(imageEntity);
+    }
+
+    public List<UserEntity> findTop10UsersByAudioCount(){
+        return userRepository.findTop10UsersByAudioCount(PageRequest.of(0,10));
+    }
+    @Transactional
+    public UserEntity findByLogin(Principal principal){
+        return userRepository.findByEmail(principal.getName()).orElse(null);
     }
 }

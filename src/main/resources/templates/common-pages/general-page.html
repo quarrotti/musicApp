@@ -53,9 +53,9 @@
             background-color: #333333; /* Цвет при наведении */
         }
         .avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
+            width: 100px; /* Ширина аватарки */
+            height: 100px; /* Высота аватарки */
+            object-fit: cover; /* Сжатие изображения, чтобы оно вписалось в квадрат */
             margin-bottom: 15px;
         }
         .link-container {
@@ -72,18 +72,18 @@
 <body>
 
 <div class="sidebar">
-    <h2 onclick="location.href='/users'">Пользователи</h2>
+    <h2 onclick="location.href='/users'">Топ пользователей по добавленной музыке</h2>
     <ul class="user-list">
         <li th:each="user : ${users}" th:text="${user.username}"></li>
     </ul>
 </div>
 
 <div class="music-center">
-    <h2 onclick="location.href='/music'">Музыка</h2>
+    <h2 onclick="location.href='/music'">Ваша музыка</h2>
     <ul class="music-list">
-        <li th:each="track : ${tracks}">
-            <span th:text="${track.title}"
-                  th:onclick="'playTrack(\'' + ${track.audioUrl} + '\')'"
+        <li th:each="audio : ${audios}">
+            <span th:text="${audio.name}"
+                  th:onclick="'playTrack(\'/audio/stream/' + ${audio.id} + '\')'"
                   style="cursor: pointer;"></span>
         </li>
     </ul>
@@ -91,10 +91,10 @@
 </div>
 
 <div class="profile">
-    <h2>Профиль пользователя</h2>
-    <img src="path/to/avatar.jpg" alt="Аватар пользователя" class="avatar" />
-    <p th:text="${currentUser.username}"></p>
-    <p th:text="${currentUser.email}"></p>
+    <h2>Ваш профиль</h2>
+    <img th:src="@{/avatar-generalPage}" class="avatar" />
+    <p th:text="${currentUser .username}"></p>
+    <p th:text="${currentUser .email}"></p>
     <div class="link-container">
         <a href="/profile">Открыть профиль</a>
     </div>

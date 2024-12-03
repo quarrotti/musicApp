@@ -1,7 +1,9 @@
 package org.example.musicApp.api.controllers;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.musicApp.api.dto.UserDto;
+import org.example.musicApp.api.services.AudioService;
 import org.example.musicApp.api.services.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,15 +14,20 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
 public class CommonController {
     private final UserService userService;
+    private final AudioService audioService;
 
-
+    @Transactional
     @GetMapping("/general")
-    public String general(){
+    public String general(Model model, Principal principal){
+        model.addAttribute("currentUser", userService.findByLogin(principal));
+        model.addAttribute("users", userService.findTop10UsersByAudioCount());
+        model.addAttribute("audios", audioService.listAudioByUser(principal));
         return "common-pages/general-page";
     }
 
