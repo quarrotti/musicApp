@@ -21,6 +21,7 @@ import java.security.Principal;
 public class ImageController {
     private final UserService userService;
     private final ImageService imageService;
+
     @Transactional
     @GetMapping("/avatar-generalPage")
     public ResponseEntity<InputStreamResource> getUserAvatar(Principal principal) {

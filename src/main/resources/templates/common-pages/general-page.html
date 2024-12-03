@@ -53,8 +53,8 @@
             background-color: #333333; /* Цвет при наведении */
         }
         .avatar {
-            width: 100px; /* Ширина аватарки */
-            height: 100px; /* Высота аватарки */
+            width: 125px; /* Ширина аватарки */
+            height: 125px; /* Высота аватарки */
             object-fit: cover; /* Сжатие изображения, чтобы оно вписалось в квадрат */
             margin-bottom: 15px;
         }
@@ -93,8 +93,8 @@
 <div class="profile">
     <h2>Ваш профиль</h2>
     <img th:src="@{/avatar-generalPage}" class="avatar" />
-    <p th:text="${currentUser .username}"></p>
-    <p th:text="${currentUser .email}"></p>
+    <p th:text="${currentUser.username}"></p>
+    <p th:text="${currentUser.email}"></p>
     <div class="link-container">
         <a href="/profile">Открыть профиль</a>
     </div>

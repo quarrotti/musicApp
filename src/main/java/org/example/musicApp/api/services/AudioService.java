@@ -21,4 +21,11 @@ public class AudioService {
     public AudioEntity findById(Long id){
         return audioRepository.findById(id).orElse(null);
     }
+
+    public int countOfAudioByEmail(Principal principal){
+        return audioRepository.countAllByUserEmail(principal);
+    }
+    public int countOfAudioById(Long id){
+        return audioRepository.countAllByUserId(id);
+    }
 }

@@ -16,6 +16,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AudioController {
     private final AudioService audioService;
+
     @Transactional
     @GetMapping("/audio/stream/{id}")
     public void streamAudio(@PathVariable Long id, HttpServletResponse response) throws IOException {

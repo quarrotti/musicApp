@@ -33,6 +33,7 @@ public class UserEntity {
     String password;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
+    @JoinColumn
     ImageEntity image;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
