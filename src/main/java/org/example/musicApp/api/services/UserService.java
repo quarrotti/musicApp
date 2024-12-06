@@ -55,7 +55,7 @@ public class UserService {
     public List<UserEntity> findTop10UsersByAudioCount(){
         return userRepository.findTop10UsersByAudioCount(PageRequest.of(0,10));
     }
-
+    @Transactional
     public UserEntity findByLogin(Principal principal){
         return userRepository.findByEmail(principal.getName()).orElse(null);
     }
@@ -63,7 +63,7 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
-    public void editPersonalProfile(UserEntity user, Principal principal){
+    public void editPersonalProfile(UserDto user, Principal principal){
         UserEntity updateUser = findByLogin(principal);
         if(user.getUsername() != "") updateUser.setUsername(user.getUsername());
         if(user.getDescription() != "") updateUser.setDescription(user.getDescription());

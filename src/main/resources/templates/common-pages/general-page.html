@@ -12,7 +12,6 @@
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: space-between;
             height: 100vh;
         }
         .sidebar, .music-center, .profile {
@@ -24,10 +23,14 @@
             background-color: #1c1c1c; /* Темный фон для боковой панели */
             color: white;
             overflow-y: auto; /* Прокрутка, если контент не помещается */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Центрирование пользователей */
         }
         .music-center {
             background-color: #2c2c2c; /* Темный фон для центра */
             color: white;
+            flex-grow: 1; /* Занимает оставшееся пространство */
         }
         .profile {
             background-color: #1c1c1c; /* Темный фон для профиля */
@@ -43,6 +46,7 @@
         .user-list, .music-list {
             list-style: none;
             padding: 0;
+            text-align: center; /* Центрирование списка пользователей */
         }
         .user-list li, .music-list li {
             margin-bottom: 10px;
@@ -67,6 +71,42 @@
             color: #00BFFF;
             text-decoration: none;
         }
+        .upload-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #00BFFF; /* Цвет кнопки */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .upload-button:hover {
+            background-color: #008CBA; /* Цвет кнопки при наведении */
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+            display: none; /* Скрываем изначально */
+        }
+        .play-pause {
+            margin: 0 10px;
+            cursor: pointer;
+            color: #00BFFF;
+            font-size: 24px; /* Увеличиваем размер кнопки воспроизведения */
+        }
+        .time {
+            color: white;
+            margin: 0 5px;
+        }
+        #seekBar {
+            flex-grow: 1; /* Ползунок занимает оставшееся пространство */
+            margin: 0 10px;
+        }
+        .controls {
+            display: none; /* Скрываем элементы управления по умолчанию */
+        }
     </style>
 </head>
 <body>
@@ -87,24 +127,82 @@
                   style="cursor: pointer;"></span>
         </li>
     </ul>
+    <div th:if="${#lists.isEmpty(audios)}">
+        <p>У вас пока нет музыки, самое время загрузить!</p>
+        <button class="upload-button" onclick="location.href='/load-audio'">Добавить музыку</button>
+    </div>
     <audio id="audioPlayer" controls style="display: none;"></audio>
+    <div class="controls" id="audioControls">
+        <span class="play-pause" id="playPauseButton">▶</span>
+        <span class="time" id="currentTime">0:00</span>
+        <input type="range" id="seekBar" value="0" min="0" max="100">
+        <span class="time" id="duration">0:00</span>
+    </div>
 </div>
 
 <div class="profile">
     <h2>Ваш профиль</h2>
     <img th:src="@{/avatar-generalPage}" class="avatar" />
-    <p th:text="${currentUser.username}"></p>
-    <p th:text="${currentUser.email}"></p>
+    <p th:text="${currentUser .username}"></p>
     <div class="link-container">
-        <a href="/profile">Открыть профиль</a>
+        <a href="/personal-profile">Открыть профиль</a>
     </div>
 </div>
 
 <script>
+    const audioPlayer = document.getElementById('audioPlayer');
+    const playPauseButton = document.getElementById('playPauseButton');
+    const audioControls = document.getElementById('audioControls');
+    const currentTimeDisplay = document.getElementById('currentTime');
+    const durationDisplay = document.getElementById('duration');
+    const seekBar = document.getElementById('seekBar');
+
     function playTrack(audioUrl) {
-        const audioPlayer = document.getElementById('audioPlayer');
         audioPlayer.src = audioUrl; // Установка источника аудио
-        audioPlayer.play(); // Воспроизведение аудио
+        audioControls.style.display = 'flex'; // Показать элементы управления
+        updateDuration();
+    }
+
+    playPauseButton.addEventListener('click', () => {
+        if (audioPlayer.paused) {
+            audioPlayer.play();
+            playPauseButton.textContent = '❚❚'; // Изменить на паузу
+        } else {
+            audioPlayer.pause();
+            playPauseButton.textContent = '▶'; // Изменить на воспроизведение
+        }
+    });
+
+    audioPlayer.addEventListener('timeupdate', () => {
+        updateCurrentTime();
+        updateSeekBar();
+    });
+
+    seekBar.addEventListener('input', () => {
+        const seekTime = audioPlayer.duration * (seekBar.value / 100);
+        audioPlayer.currentTime = seekTime; // Перемотка аудио
+    });
+
+    function updateCurrentTime() {
+        const currentTime = Math.floor(audioPlayer.currentTime);
+        const minutes = Math.floor(currentTime / 60);
+        const seconds = currentTime % 60;
+        currentTimeDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    }
+
+    function updateDuration() {
+        audioPlayer.addEventListener('loadedmetadata', () => {
+            const duration = Math.floor(audioPlayer.duration);
+            const minutes = Math.floor(duration / 60);
+            const seconds = duration % 60;
+            durationDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        });
+    }
+
+    function updateSeekBar() {
+        if (audioPlayer.duration > 0) {
+            seekBar.value = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+        }
     }
 </script>
 

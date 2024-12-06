@@ -10,6 +10,6 @@ import java.util.List;
 public interface AudioRepository extends JpaRepository<AudioEntity, Long> {
 
     List<AudioEntity> findAllByUser(UserEntity user);
-    int countAllByUserEmail(Principal principal);
+    int countAudioEntitiesByUser(UserEntity user);
     int countAllByUserId(Long id);
 }

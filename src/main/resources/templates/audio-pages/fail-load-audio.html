@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ошибка загрузки - Music App</title>
+  <style>
+    body {
+      background-color: black;
+      color: #00BFFF; /* Голубой цвет */
+      font-family: 'Helvetica Neue', 'Arial', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    h1 {
+      margin: 0;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    p {
+      margin: 0;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .button-container {
+      display: flex;
+      gap: 20px; /* Отступ между кнопками */
+    }
+    .button {
+      padding: 10px 20px;
+      background-color: #00BFFF; /* Цвет кнопки */
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .button:hover {
+      background-color: #008CBA; /* Цвет кнопки при наведении */
+    }
+  </style>
+</head>
+<body>
+
+<h1>Ошибка загрузки музыки</h1>
+<p>К сожалению, произошла ошибка при загрузке вашей музыки. Пожалуйста, попробуйте еще раз.</p>
+
+<div class="button-container">
+  <button class="button" onclick="location.href='/general'">Вернуться на главную</button>
+  <button class="button" onclick="location.href='/load-audio'">Повторить попытку загрузки</button>
+</div>
+
+</body>
+</html>

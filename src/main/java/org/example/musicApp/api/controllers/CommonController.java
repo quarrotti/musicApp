@@ -22,7 +22,7 @@ public class CommonController {
     private final UserService userService;
     private final AudioService audioService;
 
-    @Transactional
+
     @GetMapping("/general")
     public String general(Model model, Principal principal){
         model.addAttribute("currentUser", userService.findByLogin(principal));

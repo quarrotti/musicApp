@@ -1,10 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль - Music App</title>
+    <style>
+        body {
+            background-color: black;
+            color: #00BFFF; /* Голубой цвет */
+            font-family: 'Helvetica Neue', 'Arial', sans-serif; /* Похожий на Spotify шрифт */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative; /* Для абсолютного позиционирования ссылки */
+        }
+        .profile-container {
+            background-color: #1c1c1c; /* Темный фон для профиля */
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+        .avatar {
+            width: 150px; /* Ширина аватарки */
+            height: 150px; /* Высота аватарки */
+            object-fit: cover; /* Сжатие изображения, чтобы оно вписалось в квадрат */
+            margin-bottom: 15px;
+        }
+        h2 {
+            margin: 10px 0;
+        }
+        .stats {
+            margin: 20px 0;
+        }
+        .stat {
+            margin: 10px 0;
+        }
+        a {
+            color: #00BFFF;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        a:hover {
+            color: #0091cc; /* Цвет при наведении */
+        }
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 16px;
+        }
+        .music-button {
+            background-color: #00BFFF; /* Цвет кнопки */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        .music-button:hover {
+            background-color: #0091cc; /* Цвет кнопки при наведении */
+        }
+    </style>
 </head>
 <body>
+
+<a class="back-link" href="/general">← Вернуться на главную</a>
+
+<div class="profile-container">
+    <img th:src="@{/avatar-generalPage}" class="avatar" />
+    <h2 th:text="${currentUser.username}"></h2>
+
+    <div class="stats">
+        <div class="stat">
+            <strong>Количество песен:</strong> <span th:text="${countAudio}"></span>
+        </div>
+    </div>
+
+    <button class="music-button" onclick="location.href='/your-music'">Перейти к вашей музыке</button>
+</div>
+
+<script>
+    // Здесь можно добавить дополнительные скрипты, если они понадобятся
+</script>
 
 </body>
 </html>

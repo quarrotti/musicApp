@@ -6,6 +6,8 @@ import lombok.experimental.FieldDefaults;
 import org.example.musicApp.store.entities.aboutUser.UserEntity;
 
 import java.util.HashSet;
+import java.util.Set;
+
 @Table(name = "audio")
 @Entity
 @Getter
@@ -19,13 +21,15 @@ public class AudioEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     String name;
+    String fileName;
+    String fileType;
     @Lob
     byte[] data;
 
     @ElementCollection(targetClass = Genre.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "audio_genre", joinColumns = @JoinColumn(name = "audio_id"))
     @Enumerated(EnumType.STRING)
-    HashSet<Genre> genres = new HashSet<>();
+    Set<Genre> genres = new HashSet<>();
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
