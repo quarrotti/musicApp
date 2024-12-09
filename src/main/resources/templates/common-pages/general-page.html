@@ -40,7 +40,9 @@
         h2 {
             margin: 0;
             margin-bottom: 15px;
-            text-align: center; /* Центрирование заголовков */
+            display: flex;
+            justify-content: center; /* Центрируем заголовок */
+            align-items: center; /* Центрирование элементов по вертикали */
             cursor: pointer; /* Курсор при наведении */
         }
         .user-list, .music-list {
@@ -90,22 +92,11 @@
             margin-top: 10px;
             display: none; /* Скрываем изначально */
         }
-        .play-pause {
+        .play-pause, .restart {
             margin: 0 10px;
             cursor: pointer;
             color: #00BFFF;
-            font-size: 24px; /* Увеличиваем размер кнопки воспроизведения */
-        }
-        .time {
-            color: white;
-            margin: 0 5px;
-        }
-        #seekBar {
-            flex-grow: 1; /* Ползунок занимает оставшееся пространство */
-            margin: 0 10px;
-        }
-        .controls {
-            display: none; /* Скрываем элементы управления по умолчанию */
+            font-size: 24px; /* Увеличиваем размер кнопки */
         }
     </style>
 </head>
@@ -114,53 +105,62 @@
 <div class="sidebar">
     <h2 onclick="location.href='/users'">Топ пользователей по добавленной музыке</h2>
     <ul class="user-list">
-        <li th:each="user : ${users}" th:text="${user.username}"></li>
+        <li th:each="user : ${users}">
+            <span th:if="${user.id == currentUser.id}">
+                <strong th:text="${user.username}"></strong> (это вы)
+            </span>
+            <a th:if="${user.id != currentUser .id}" th:href="@{/profile/{id}(id=${user.id})}" th:text="${user.username}"></a>
+        </li>
     </ul>
 </div>
 
+
+
 <div class="music-center">
-    <h2 onclick="location.href='/music'">Ваша музыка</h2>
+    <h2>
+        Последние добавленные песни
+        <div class="controls" id="audioControls" style="display: none;">
+            <span class="play-pause" id="playPauseButton">▶</span>
+            <span class="restart" id="restartButton">🔄</span>
+        </div>
+    </h2>
     <ul class="music-list">
-        <li th:each="audio : ${audios}">
+        <li th:each="audio : ${lastAddedMusic}">
             <span th:text="${audio.name}"
                   th:onclick="'playTrack(\'/audio/stream/' + ${audio.id} + '\')'"
                   style="cursor: pointer;"></span>
         </li>
     </ul>
-    <div th:if="${#lists.isEmpty(audios)}">
-        <p>У вас пока нет музыки, самое время загрузить!</p>
+    <div th:if="${#lists.isEmpty(lastAddedMusic)}">
+        <p>Здесь пока нет музыки, самое время загрузить!</p>
         <button class="upload-button" onclick="location.href='/load-audio'">Добавить музыку</button>
     </div>
     <audio id="audioPlayer" controls style="display: none;"></audio>
-    <div class="controls" id="audioControls">
-        <span class="play-pause" id="playPauseButton">▶</span>
-        <span class="time" id="currentTime">0:00</span>
-        <input type="range" id="seekBar" value="0" min="0" max="100">
-        <span class="time" id="duration">0:00</span>
-    </div>
 </div>
 
 <div class="profile">
     <h2>Ваш профиль</h2>
-    <img th:src="@{/avatar-generalPage}" class="avatar" />
+    <img th:src="@{/personal-avatar}" class="avatar" />
     <p th:text="${currentUser .username}"></p>
     <div class="link-container">
         <a href="/personal-profile">Открыть профиль</a>
+        <br>
+        <br>
+        <a href="/music">Музыка</a> <!-- Добавлена ссылка на музыку -->
     </div>
 </div>
 
 <script>
     const audioPlayer = document.getElementById('audioPlayer');
     const playPauseButton = document.getElementById('playPauseButton');
+    const restartButton = document.getElementById('restartButton');
     const audioControls = document.getElementById('audioControls');
-    const currentTimeDisplay = document.getElementById('currentTime');
-    const durationDisplay = document.getElementById('duration');
-    const seekBar = document.getElementById('seekBar');
 
     function playTrack(audioUrl) {
         audioPlayer.src = audioUrl; // Установка источника аудио
         audioControls.style.display = 'flex'; // Показать элементы управления
-        updateDuration();
+        audioPlayer.play(); // Автоматически воспроизводим трек
+        playPauseButton.textContent = '❚❚'; // Изменить на паузу
     }
 
     playPauseButton.addEventListener('click', () => {
@@ -173,37 +173,11 @@
         }
     });
 
-    audioPlayer.addEventListener('timeupdate', () => {
-        updateCurrentTime();
-        updateSeekBar();
+    restartButton.addEventListener('click', () => {
+        audioPlayer.currentTime = 0; // Перезапустить трек
+        audioPlayer.play(); // Запустить воспроизведение
+        playPauseButton.textContent = '❚❚'; // Изменить на паузу
     });
-
-    seekBar.addEventListener('input', () => {
-        const seekTime = audioPlayer.duration * (seekBar.value / 100);
-        audioPlayer.currentTime = seekTime; // Перемотка аудио
-    });
-
-    function updateCurrentTime() {
-        const currentTime = Math.floor(audioPlayer.currentTime);
-        const minutes = Math.floor(currentTime / 60);
-        const seconds = currentTime % 60;
-        currentTimeDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-    }
-
-    function updateDuration() {
-        audioPlayer.addEventListener('loadedmetadata', () => {
-            const duration = Math.floor(audioPlayer.duration);
-            const minutes = Math.floor(duration / 60);
-            const seconds = duration % 60;
-            durationDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-        });
-    }
-
-    function updateSeekBar() {
-        if (audioPlayer.duration > 0) {
-            seekBar.value = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-        }
-    }
 </script>
 
 </body>

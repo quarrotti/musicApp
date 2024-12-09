@@ -35,9 +35,6 @@ public class UserDto {
     List<AudioEntity> listOfAudios;
 
 
-    List<PlaylistEntity> listOfPlaylists;
-
-
     Collection<Role> roles = new HashSet<>();
 
 

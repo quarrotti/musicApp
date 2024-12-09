@@ -27,7 +27,7 @@ public class CommonController {
     public String general(Model model, Principal principal){
         model.addAttribute("currentUser", userService.findByLogin(principal));
         model.addAttribute("users", userService.findTop10UsersByAudioCount());
-        model.addAttribute("audios", audioService.listAudioByUser(principal));
+        model.addAttribute("lastAddedMusic", audioService.findTop20ByOrderByCreatedAtDesc());
         return "common-pages/general-page";
     }
 

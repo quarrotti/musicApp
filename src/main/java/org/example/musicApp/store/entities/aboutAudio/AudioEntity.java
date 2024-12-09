@@ -4,8 +4,11 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.musicApp.store.entities.aboutUser.UserEntity;
+import org.springframework.cglib.core.Local;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Table(name = "audio")
@@ -23,6 +26,8 @@ public class AudioEntity {
     String name;
     String fileName;
     String fileType;
+    @Column(columnDefinition = "TIMESTAMP")
+    LocalDateTime createdAt;
     @Lob
     byte[] data;
 
@@ -33,10 +38,14 @@ public class AudioEntity {
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
-    UserEntity user;
+    UserEntity creator;
 
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinColumn(name = "playlist_id")
-    PlaylistEntity playlist;
+    @ManyToMany(mappedBy = "addedAudios")
+    List<UserEntity> UsersWhoAdded;
+
+    @PrePersist
+    public void init(){
+       this.createdAt = LocalDateTime.now();
+    }
 
 }

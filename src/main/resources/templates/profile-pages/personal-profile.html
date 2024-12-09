@@ -75,7 +75,7 @@
 <a class="back-link" href="/general">← Вернуться на главную</a>
 
 <div class="profile-container">
-    <img th:src="@{/avatar-generalPage}" class="avatar" />
+    <img th:src="@{/personal-avatar}" class="avatar" />
     <h2 th:text="${currentUser.username}"></h2>
 
     <div class="stats">
@@ -84,7 +84,7 @@
         </div>
     </div>
 
-    <button class="music-button" onclick="location.href='/your-music'">Перейти к вашей музыке</button>
+    <button class="music-button" onclick="location.href='/personal-music'">Перейти к вашей музыке</button>
 </div>
 
 <script>

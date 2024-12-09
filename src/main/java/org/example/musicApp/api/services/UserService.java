@@ -38,7 +38,6 @@ public class UserService {
                 .email(userDto.getEmail())
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .username(userDto.getUsername())
-                .description(userDto.getDescription())
                 .roles(Set.of(Role.User))
                 .build();
         userRepository.save(userForSave);
@@ -51,7 +50,7 @@ public class UserService {
 
         imageRepository.save(imageEntity);
     }
-
+    @Transactional
     public List<UserEntity> findTop10UsersByAudioCount(){
         return userRepository.findTop10UsersByAudioCount(PageRequest.of(0,10));
     }
@@ -59,6 +58,7 @@ public class UserService {
     public UserEntity findByLogin(Principal principal){
         return userRepository.findByEmail(principal.getName()).orElse(null);
     }
+    @Transactional
     public UserEntity findById(Long id){
         return userRepository.findById(id).orElse(null);
     }
@@ -66,7 +66,10 @@ public class UserService {
     public void editPersonalProfile(UserDto user, Principal principal){
         UserEntity updateUser = findByLogin(principal);
         if(user.getUsername() != "") updateUser.setUsername(user.getUsername());
-        if(user.getDescription() != "") updateUser.setDescription(user.getDescription());
         userRepository.save(updateUser);
+    }
+
+    public void save(UserEntity user){
+        userRepository.save(user);
     }
 }

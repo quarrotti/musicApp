@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Музыка - Music App</title>
+    <style>
+        body {
+            background-color: black;
+            color: #00BFFF; /* Голубой цвет */
+            font-family: 'Helvetica Neue', 'Arial', sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #1c1c1c;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar h2 {
+            margin: 0;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+        .music-center {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: #2c2c2c;
+            color: white;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column; /* Изменено на column для вертикального расположения */
+        }
+        .music-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 10px; /* Отступ сверху для списка */
+        }
+        .music-list li {
+            margin-bottom: 10px;
+            cursor: pointer; /* Указатель курсора на элементы списка */
+        }
+        .search-form {
+            display: flex; /* Используем flex для горизонтального расположения */
+            margin-bottom: 10px; /* Отступ снизу для формы поиска */
+        }
+        .search-input {
+            flex-grow: 1; /* Занять все доступное пространство */
+            padding: 10px;
+            border: 1px solid #00BFFF;
+            border-radius: 5px 0 0 5px; /* Скругление только с левой стороны */
+            background-color: #1c1c1c;
+            color: white;
+        }
+        .search-input::placeholder {
+            color: #00BFFF; /* Цвет текста в placeholder */
+        }
+        .search-button {
+            padding: 10px; /* Установить одинаковое значение padding */
+            border: 1px solid #00BFFF;
+            border-left: none; /* Убрать левую границу */
+            border-radius: 0 5px 5px 0; /* Скругление только с правой стороны */
+            background-color: #00BFFF;
+            color: white;
+            cursor: pointer;
+            display: flex; /* Используем flex для центрирования текста */
+            align-items: center; /* Вертикальное центрирование текста */
+            justify-content: center; /* Горизонтальное центрирование текста */
+        }
+        .search-button:hover {
+            background-color: #008CBA;
+        }
+        #audioControls {
+            display: flex; /* Установлено на flex для горизонтального расположения */
+            margin-left: 0; /* Убрали отступ между заголовком и элементами управления */
+            align-items: center; /* Центрирование элементов по вертикали */
+        }
+        .controls span {
+            margin-left: 5px; /* Уменьшенный отступ между кнопками */
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h2 onclick="location.href='/general'">Главная страница</h2>
+    <h2 onclick="location.href='/personal-music'">Ваша музыка</h2>
+    <h2 onclick="location.href='/your-playlists'">Ваши плейлисты</h2>
+</div>
+
+<div class="music-center">
+    <!-- Форма поиска -->
+    <form action="/search-audio" method="GET" class="search-form">
+        <input type="text" name="query" class="search-input" placeholder="Поиск песен...">
+        <button type="submit" class="search-button">Поиск</button>
+    </form>
+
+    <h2 style="display: flex; align-items: center; margin-bottom: 5px;">
+        Последние добавленные
+        <div class="controls" id="audioControls" style="display: none;">
+            <span class="play-pause" id="playPauseButton">▶</span>
+            <span class="restart" id="restartButton">🔄</span>
+        </div>
+    </h2>
+    <ul class="music-list">
+        <li th:each="audio : ${lastAddedMusic}">
+        <span th:text="${audio.name}"
+              th:onclick="'playTrack(\'/audio/stream/' + ${audio.id} + '\')'"
+              style="cursor: pointer;"></span>
+            <span> by <span th:text="${audio.user.username}"></span></span>
+        </li>
+    </ul>
+    <div th:if="${#lists.isEmpty(lastAddedMusic)}">
+        <p>Здесь пока нет музыки, самое время загрузить!</p>
+        <button class="upload-button" onclick="location.href='/load-audio'">Добавить музыку</button>
+    </div>
+    <audio id="audioPlayer" controls style="display: none;"></audio>
+</div>
+
+<script>
+    const audioPlayer = document.getElementById('audioPlayer');
+    const playPauseButton = document.getElementById('playPauseButton');
+    const restartButton = document.getElementById('restartButton');
+    const audioControls = document.getElementById('audioControls');
+
+    function playTrack(audioUrl) {
+        audioPlayer.src = audioUrl; // Установка источника аудио
+        audioControls.style.display = 'flex'; // Показать элементы управления
+        audioPlayer.play(); // Автоматически воспроизводим трек
+        playPauseButton.textContent = '❚❚'; // Изменить на паузу
+    }
+
+    playPauseButton.addEventListener('click', () => {
+        if (audioPlayer.paused) {
+            audioPlayer.play();
+            playPauseButton.textContent = '❚❚'; // Изменить на паузу
+        } else {
+            audioPlayer.pause();
+            playPauseButton.textContent = '▶'; // Изменить на воспроизведение
+        }
+    });
+
+    restartButton.addEventListener('click', () => {
+        audioPlayer.currentTime = 0; // Перезапустить трек
+        audioPlayer.play(); // Запустить воспроизведение
+        playPauseButton.textContent = '❚❚'; // Изменить на паузу
+    });
+</script>
+
+</body>
+</html>

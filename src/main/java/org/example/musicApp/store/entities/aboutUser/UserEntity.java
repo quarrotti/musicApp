@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.musicApp.store.entities.aboutAudio.AudioEntity;
-import org.example.musicApp.store.entities.aboutAudio.PlaylistEntity;
 import org.example.musicApp.store.entities.common.ImageEntity;
 
 import java.util.Collection;
@@ -26,10 +25,8 @@ public class UserEntity {
 
     String username;
 
-    @Column(name = "description", columnDefinition = "TEXT")
-    String description;
-
     String email; // как логин
+
     String password;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
@@ -37,10 +34,15 @@ public class UserEntity {
     ImageEntity image;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
-    List<AudioEntity> listOfAudios;
+    List<AudioEntity> uploadedAudios;// загруженные
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
-    List<PlaylistEntity> listOfPlaylists;
+    @ManyToMany
+    @JoinTable(
+            name = "user_added_audio",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "audio_id")
+    )
+    List<AudioEntity> addedAudios;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))

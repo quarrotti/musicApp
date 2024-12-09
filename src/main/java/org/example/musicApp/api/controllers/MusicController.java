@@ -5,9 +5,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.musicApp.api.services.AudioService;
+import org.example.musicApp.api.services.PlaylistService;
 import org.example.musicApp.store.entities.aboutAudio.AudioEntity;
 import org.example.musicApp.store.entities.aboutAudio.Genre;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,8 +21,9 @@ import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
-public class AudioController {
+public class MusicController {
     private final AudioService audioService;
+    private final PlaylistService playlistService;
 
     @Transactional
     @GetMapping("/audio/stream/{id}")
@@ -35,11 +38,7 @@ public class AudioController {
     }
     @GetMapping("/load-audio")
     public String pageForLoadAudio(){
-        return "audio-pages/load-audio";
-    }
-    @GetMapping("/successful")
-    public String sla(){
-        return "audio-pages/successful-load";
+        return "music-pages/load-audio";
     }
 
     @PostMapping("/load-audio")
@@ -61,7 +60,33 @@ public class AudioController {
 
     @GetMapping("/fail-load-audio")
     public String failLoadAudio(){
-        return "audio-pages/fail-load-audio";
+        return "music-pages/fail-load-audio";
+    }
+
+    @GetMapping("/music")
+    public String generalMusicPage(Model model){
+        model.addAttribute("lastAddedMusic", audioService.findTop20ByOrderByCreatedAtDesc());
+        return "music-pages/general-music-page";
+    }
+
+    @GetMapping("/search-audio")
+    public String searchAudio(@RequestParam String name, Model model){
+        model.addAttribute("currentAudio", audioService.findByName(name));
+        return "music-pages/current-audio";
+    }
+
+    @GetMapping("/personal-music")
+    public String personalMusic(Principal principal, Model model){
+        model.addAttribute("listOfAudio", audioService.listAudioByUser(principal));
+        model.addAttribute("listOfPlayList", playlistService.listOfPlaylistsByUser(principal));
+        return "music-pages/personal-music";
+    }
+
+    @GetMapping("/user-music/{id}")
+    public String userMusic(@PathVariable Long id, Model model){
+        model.addAttribute("listOfAudio", audioService.listAudioByUser(id));
+        model.addAttribute("listOfPlayList", playlistService.listOfPlaylistsByUser(id));
+        return "music-pages/user-music";
     }
 
 }

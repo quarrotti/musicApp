@@ -23,9 +23,27 @@ public class ImageController {
     private final ImageService imageService;
 
     @Transactional
-    @GetMapping("/avatar-generalPage")
-    public ResponseEntity<InputStreamResource> getUserAvatar(Principal principal) {
+    @GetMapping("/personal-avatar")
+    public ResponseEntity<InputStreamResource> getUserPersonalAvatar(Principal principal) {
         byte[] avatarData = imageService.findByUser(principal).getData();
+
+        if (avatarData == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(avatarData));
+
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=avatar.jpg")
+                .contentType(MediaType.IMAGE_JPEG)
+                .contentLength(avatarData.length)
+                .body(resource);
+    }
+    @Transactional
+    @GetMapping("/avatar/{id}")
+    public ResponseEntity<InputStreamResource> getUserAvatar(@PathVariable Long id) {
+        byte[] avatarData = imageService.findByUserId(id).getData();
 
         if (avatarData == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

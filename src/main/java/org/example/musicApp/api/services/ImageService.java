@@ -25,6 +25,9 @@ public class ImageService {
     public ImageEntity findByUser(Principal principal){
         return imageRepository.findByUser(userService.findByLogin(principal));
     }
+    public ImageEntity findByUserId(Long id){
+        return imageRepository.findByUser(userService.findById(id));
+    }
     @Transactional
     public void changeUserImage(MultipartFile imageFile, Principal principal) throws IOException {
         ImageEntity imageEntity = new ImageEntity();
