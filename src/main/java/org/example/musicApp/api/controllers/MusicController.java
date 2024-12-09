@@ -5,7 +5,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.musicApp.api.services.AudioService;
-import org.example.musicApp.api.services.PlaylistService;
 import org.example.musicApp.store.entities.aboutAudio.AudioEntity;
 import org.example.musicApp.store.entities.aboutAudio.Genre;
 import org.springframework.stereotype.Controller;
@@ -23,7 +22,6 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class MusicController {
     private final AudioService audioService;
-    private final PlaylistService playlistService;
 
     @Transactional
     @GetMapping("/audio/stream/{id}")
@@ -78,14 +76,12 @@ public class MusicController {
     @GetMapping("/personal-music")
     public String personalMusic(Principal principal, Model model){
         model.addAttribute("listOfAudio", audioService.listAudioByUser(principal));
-        model.addAttribute("listOfPlayList", playlistService.listOfPlaylistsByUser(principal));
         return "music-pages/personal-music";
     }
 
     @GetMapping("/user-music/{id}")
     public String userMusic(@PathVariable Long id, Model model){
         model.addAttribute("listOfAudio", audioService.listAudioByUser(id));
-        model.addAttribute("listOfPlayList", playlistService.listOfPlaylistsByUser(id));
         return "music-pages/user-music";
     }
 
