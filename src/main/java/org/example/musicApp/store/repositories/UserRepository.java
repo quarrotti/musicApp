@@ -12,7 +12,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByEmail(String email);
 
     boolean existsByEmail(String email);
-    @Query("SELECT u FROM UserEntity u ORDER BY SIZE(u.listOfAudios) DESC")
+    @Query("SELECT u FROM UserEntity u ORDER BY SIZE(u.audios) DESC")
     List<UserEntity> findTop10UsersByAudioCount(Pageable pageable);
 
 

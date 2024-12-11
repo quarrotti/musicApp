@@ -36,12 +36,12 @@ public class AudioEntity {
     @Enumerated(EnumType.STRING)
     Set<Genre> genres = new HashSet<>();
 
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    UserEntity creator;
+    @ManyToMany(mappedBy = "audios")
+    List<UserEntity> users;
 
-    @ManyToMany(mappedBy = "addedAudios")
-    List<UserEntity> UsersWhoAdded;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    UserEntity user;
 
     @PrePersist
     public void init(){

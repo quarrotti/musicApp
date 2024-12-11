@@ -33,16 +33,16 @@ public class UserEntity {
     @JoinColumn
     ImageEntity image;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
-    List<AudioEntity> uploadedAudios;// загруженные
-
     @ManyToMany
     @JoinTable(
-            name = "user_added_audio",
+            name = "user_audio",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "audio_id")
     )
-    List<AudioEntity> addedAudios;
+    List<AudioEntity> audios;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+    List<AudioEntity> uploadedAudio;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))

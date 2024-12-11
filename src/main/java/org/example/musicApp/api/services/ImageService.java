@@ -34,8 +34,10 @@ public class ImageService {
         imageEntity.setFileName(imageFile.getOriginalFilename());
         imageEntity.setFileType(imageFile.getContentType());
         imageEntity.setData(imageFile.getBytes());
-        imageEntity.setUser(userService.findByLogin(principal)); // Связываем изображение с пользователем
 
+        imageRepository.delete(findByUser(principal));
+
+        imageEntity.setUser(userService.findByLogin(principal));
         imageRepository.save(imageEntity);
     }
 }

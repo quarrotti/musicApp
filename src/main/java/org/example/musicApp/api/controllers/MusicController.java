@@ -9,10 +9,7 @@ import org.example.musicApp.store.entities.aboutAudio.AudioEntity;
 import org.example.musicApp.store.entities.aboutAudio.Genre;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -83,6 +80,12 @@ public class MusicController {
     public String userMusic(@PathVariable Long id, Model model){
         model.addAttribute("listOfAudio", audioService.listAudioByUser(id));
         return "music-pages/user-music";
+    }
+
+    @PutMapping("/add-music/{id}")
+    public String addMusic(Principal principal, @PathVariable Long id){
+        audioService.addAudioToUser(principal, id);
+        return " ";//todo
     }
 
 }

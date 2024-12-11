@@ -5,11 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.example.musicApp.store.entities.aboutAudio.AudioEntity;
 import org.example.musicApp.store.entities.aboutAudio.Genre;
 import org.example.musicApp.store.entities.aboutUser.UserEntity;
-import org.example.musicApp.store.entities.common.ImageEntity;
 import org.example.musicApp.store.repositories.AudioRepository;
-import org.example.musicApp.store.repositories.UserRepository;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+
 @Service
 @RequiredArgsConstructor
 public class AudioService {
@@ -27,20 +25,21 @@ public class AudioService {
 
     @Transactional
     public List<AudioEntity> listAudioByUser(Principal principal){
-        return audioRepository.findAllByUser(userService.findByLogin(principal));
+//        System.out.println(audioRepository.findAllByUser(userService.findByLogin(principal).getId()));
+        return audioRepository.findAllByUser(userService.findByLogin(principal).getId());
     }
     @Transactional
     public List<AudioEntity> listAudioByUser(Long id){
-        return audioRepository.findAllByUser(userService.findById(id));
+        return audioRepository.findAllByUser(id);
     }
     public AudioEntity findById(Long id){
         return audioRepository.findById(id).orElse(null);
     }
     public int countOfAudioByEmail(Principal principal){
-        return audioRepository.countAudioEntitiesByUser(userService.findByLogin(principal));
+        return audioRepository.countAllByUser(userService.findByLogin(principal).getId());
     }
     public int countOfAudioById(Long id){
-        return audioRepository.countAllByUserId(id);
+        return audioRepository.countAllByUser(id);
     }
 
     public void saveAudio(AudioEntity audio){
@@ -56,7 +55,8 @@ public class AudioService {
         audio.setFileType(file.getContentType());
         audio.setData(file.getBytes());
         audio.setGenres(Set.of(Genre.valueOf(String.valueOf(genre))));
-        audio.setCreator(userService.findByLogin(principal));
+        audio.setUsers(List.of(userService.findByLogin(principal)));
+        audio.setUser(userService.findByLogin(principal));
 
         saveAudio(audio);
     }
@@ -73,21 +73,10 @@ public class AudioService {
         UserEntity user = userService.findByLogin(principal);
         AudioEntity audio = findById(audioId);
 
-        user.getAddedAudios().add(audio);
+        user.getAudios().add(audio);
 
         userService.save(user);
     }
-    @Transactional
-    public List<AudioEntity> listOfAddedAudios(Principal principal){
-        UserEntity user = userService.findByLogin(principal);
 
-        return user.getAddedAudios();
-    }
-    @Transactional
-    public List<AudioEntity> listOfAddedAudios(Long id){
-        UserEntity user = userService.findById(id);
-
-        return user.getAddedAudios();
-    }
 
 }

@@ -33,13 +33,16 @@ public class ProfileController {
         return "profile-pages/profile";
     }
 
-    @PostMapping("/users/personalProfile/edit")
-    public String editPersonalProfile(@RequestParam(required = false) String username,
-                                      @RequestParam(required = false) String description,
+    @GetMapping("/personalProfile/editUsername")
+    public String editUsername(){
+        return "profile-pages/edit-username";
+    }
+
+    @PostMapping("/personalProfile/editUsername")
+    public String editUsername(@RequestParam(required = false) String username,
                                       Principal principal){
         UserDto user = new UserDto();
         user.setUsername(username);
-        user.setDescription(description);
         userService.editPersonalProfile(user, principal);
         return "redirect:/personal-profile";
     }
