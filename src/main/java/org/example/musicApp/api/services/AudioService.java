@@ -25,21 +25,22 @@ public class AudioService {
 
     @Transactional
     public List<AudioEntity> listAudioByUser(Principal principal){
-//        System.out.println(audioRepository.findAllByUser(userService.findByLogin(principal).getId()));
-        return audioRepository.findAllByUser(userService.findByLogin(principal).getId());
+        System.out.println(audioRepository.findAllByUsers(userService.findByLogin(principal).getId()));
+        return audioRepository.findAllByUsers(userService.findByLogin(principal).getId());
     }
     @Transactional
-    public List<AudioEntity> listAudioByUser(Long id){
-        return audioRepository.findAllByUser(id);
+    public List<AudioEntity> listAudioByUserId(Long id){
+        return audioRepository.findAllByUsers(userService.findById(id).getId());
     }
     public AudioEntity findById(Long id){
         return audioRepository.findById(id).orElse(null);
     }
-    public int countOfAudioByEmail(Principal principal){
-        return audioRepository.countAllByUser(userService.findByLogin(principal).getId());
+    public Long countOfAudioByEmail(Principal principal){
+        System.out.println(audioRepository.countByUserId(userService.findByLogin(principal).getId()));
+        return audioRepository.countByUserId(userService.findByLogin(principal).getId());
     }
-    public int countOfAudioById(Long id){
-        return audioRepository.countAllByUser(id);
+    public Long countOfAudioById(Long id){
+        return audioRepository.countByUserId(id);
     }
 
     public void saveAudio(AudioEntity audio){
@@ -56,7 +57,7 @@ public class AudioService {
         audio.setData(file.getBytes());
         audio.setGenres(Set.of(Genre.valueOf(String.valueOf(genre))));
         audio.setUsers(List.of(userService.findByLogin(principal)));
-        audio.setUser(userService.findByLogin(principal));
+        audio.setCreator(userService.findByLogin(principal));
 
         saveAudio(audio);
     }

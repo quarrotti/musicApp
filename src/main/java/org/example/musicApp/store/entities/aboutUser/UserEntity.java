@@ -33,15 +33,10 @@ public class UserEntity {
     @JoinColumn
     ImageEntity image;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_audio",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "audio_id")
-    )
+    @ManyToMany(mappedBy = "users")
     List<AudioEntity> audios;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "creator")
     List<AudioEntity> uploadedAudio;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)

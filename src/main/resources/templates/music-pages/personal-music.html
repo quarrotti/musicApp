@@ -101,26 +101,12 @@
 
 <div class="sidebar">
     <h2 onclick="location.href='/general'">Главная страница</h2>
-
-    <!-- Заголовок плейлистов без кликабельности -->
-    <div class="playlist-title">Ваши плейлисты</div>
-    <ul class="playlist-list">
-        <li th:each="playlist : ${listOfPlaylists}">
-            <span th:text="${playlist.name}"
-                  th:onclick="'location.href=\'/playlist/' + ${playlist.id} + '\'"
-                  style="cursor: pointer;"></span>
-        </li>
-    </ul>
-    <div th:if="${#lists.isEmpty(listOfPlaylists)}">
-        <p>У вас нет ни одного плейлиста. Создайте новый!</p>
-        <button class="upload-button" onclick="location.href='/create-playlist'">Создать плейлист</button>
-    </div>
 </div>
 
 <div class="music-center">
     <!-- Форма поиска -->
     <form action="/search-audio" method="GET" class="search-form">
-        <input type="text" name="query" class="search-input" placeholder="Поиск песен...">
+        <input type="text" name="query" class="search-input" placeholder="Поиск ваших песен...">
         <button type="submit" class="search-button">Поиск</button>
     </form>
 

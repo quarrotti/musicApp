@@ -112,7 +112,7 @@
         <span th:text="${audio.name}"
               th:onclick="'playTrack(\'/audio/stream/' + ${audio.id} + '\')'"
               style="cursor: pointer;"></span>
-            <span> by <span th:text="${audio.user.username}"></span></span>
+            <span> by <span th:text="${audio.creator.username}"></span></span>
         </li>
     </ul>
     <div th:if="${#lists.isEmpty(lastAddedMusic)}">

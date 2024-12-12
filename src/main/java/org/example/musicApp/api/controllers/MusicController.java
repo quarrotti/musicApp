@@ -78,7 +78,7 @@ public class MusicController {
 
     @GetMapping("/user-music/{id}")
     public String userMusic(@PathVariable Long id, Model model){
-        model.addAttribute("listOfAudio", audioService.listAudioByUser(id));
+        model.addAttribute("listOfAudio", audioService.listAudioByUserId(id));
         return "music-pages/user-music";
     }
 
