@@ -33,7 +33,7 @@
             color: white;
             box-sizing: border-box;
             display: flex;
-            flex-direction: column; /* Изменено на column для вертикального расположения */
+            flex-direction: column;
         }
         .music-list {
             list-style: none;
@@ -43,36 +43,50 @@
         .music-list li {
             margin-bottom: 10px;
             cursor: pointer; /* Указатель курсора на элементы списка */
+            display: flex; /* Используем flex для горизонтального расположения */
+            justify-content: space-between; /* Распределяем пространство между элементами */
+            align-items: center; /* Центрирование элементов по вертикали */
+        }
+        .search-button {
+            background-color: red; /* Красный цвет */
+            color: white;
+            border: none;
+            border-radius: 5px; /* Скругление углов */
+            padding: 15px; /* Увеличение высоты кнопки */
+            cursor: pointer;
+            font-size: 16px; /* Увеличение шрифта */
+            width: 100%; /* Ширина кнопки на всю ширину контейнера */
+            box-sizing: border-box; /* Учитывать padding в ширине */
+            margin-bottom: 10px; /* Отступ снизу для кнопки */
+        }
+        .search-button:hover {
+            background-color: darkred; /* Цвет при наведении */
         }
         .search-form {
-            display: flex; /* Используем flex для горизонтального расположения */
             margin-bottom: 10px; /* Отступ снизу для формы поиска */
+            display: flex; /* Flex для расположения элементов в строку */
+            flex-direction: column; /* Вертикальное расположение */
         }
-        .search-input {
-            flex-grow: 1; /* Занять все доступное пространство */
+        .search-input, .genre-select {
             padding: 10px;
             border: 1px solid #00BFFF;
-            border-radius: 5px 0 0 5px; /* Скругление только с левой стороны */
+            border-radius: 5px; /* Скругление углов */
             background-color: #1c1c1c;
             color: white;
+            margin-bottom: 10px; /* Отступ снизу для инпутов */
         }
         .search-input::placeholder {
             color: #00BFFF; /* Цвет текста в placeholder */
         }
-        .search-button {
+        .search-submit {
             padding: 10px; /* Установить одинаковое значение padding */
             border: 1px solid #00BFFF;
-            border-left: none; /* Убрать левую границу */
-            border-radius: 0 5px 5px 0; /* Скругление только с правой стороны */
             background-color: #00BFFF;
             color: white;
             cursor: pointer;
-            display: flex; /* Используем flex для центрирования текста */
-            align-items: center; /* Вертикальное центрирование текста */
-            justify-content: center; /* Горизонтальное центрирование текста */
         }
-        .search-button:hover {
-            background-color: #008CBA;
+        .search-submit:hover {
+            background-color: #008CBA; /* Цвет при наведении */
         }
         #audioControls {
             display: flex; /* Установлено на flex для горизонтального расположения */
@@ -83,6 +97,32 @@
             margin-left: 5px; /* Уменьшенный отступ между кнопками */
             cursor: pointer;
         }
+        .upload-button {
+            background-color: #00BFFF; /* Синий цвет */
+            color: white;
+            border: none;
+            border-radius: 5px; /* Скругление углов */
+            padding: 15px; /* Увеличение высоты кнопки */
+            cursor: pointer;
+            font-size: 16px; /* Увеличение шрифта */
+            width: 100%; /* Ширина кнопки на всю ширину контейнера */
+            box-sizing: border-box; /* Учитывать padding в ширине */
+        }
+        .upload-button:hover {
+            background-color: #008CBA; /* Цвет при наведении */
+        }
+        .add-button {
+            background-color: #00BFFF; /* Синий цвет */
+            color: white;
+            border: none;
+            border-radius: 5px; /* Скругление углов */
+            padding: 5px 10px; /* Увеличение высоты кнопки */
+            cursor: pointer;
+            font-size: 14px; /* Размер шрифта */
+        }
+        .add-button:hover {
+            background-color: #008CBA; /* Цвет при наведении */
+        }
     </style>
 </head>
 <body>
@@ -90,15 +130,26 @@
 <div class="sidebar">
     <h2 onclick="location.href='/general'">Главная страница</h2>
     <h2 onclick="location.href='/personal-music'">Ваша музыка</h2>
-    <h2 onclick="location.href='/your-playlists'">Ваши плейлисты</h2>
+
+    <!-- Форма поиска -->
+    <form class="search-form" method="get" action="/search-audio">
+        <input type="text" class="search-input" placeholder="Введите название песни" name="name" id="searchInput">
+        <select class="genre-select" name="genre" id="genreSelect">
+            <option value="">Выберите жанр</option>
+            <option value="Rap">Rap</option>
+            <option value="HipHop">HipHop</option>
+            <option value="Rock">Rock</option>
+            <option value="Blues">Blues</option>
+            <option value="Disco">Disco</option>
+            <option value="Techno">Techno</option>
+            <option value="Electro">Electro</option>
+            <option value="Other">Other</option>
+        </select>
+        <button type="submit" class="search-submit">Поиск</button>
+    </form>
 </div>
 
 <div class="music-center">
-    <!-- Форма поиска -->
-    <form action="/search-audio" method="GET" class="search-form">
-        <input type="text" name="query" class="search-input" placeholder="Поиск песен...">
-        <button type="submit" class="search-button">Поиск</button>
-    </form>
 
     <h2 style="display: flex; align-items: center; margin-bottom: 5px;">
         Последние добавленные
@@ -109,10 +160,14 @@
     </h2>
     <ul class="music-list">
         <li th:each="audio : ${lastAddedMusic}">
-        <span th:text="${audio.name}"
-              th:onclick="'playTrack(\'/audio/stream/' + ${audio.id} + '\')'"
-              style="cursor: pointer;"></span>
-            <span> by <span th:text="${audio.creator.username}"></span></span>
+            <span th:text="${audio.name}"
+                  th:onclick="'playTrack(\'/audio/stream/' + ${audio.id} + '\')'"
+                  style="cursor: pointer;"></span>
+            <span> by <span th:if="${audio.creator.email == currentUser .email}">your</span>
+                  <span th:if="${audio.creator.email != currentUser .email}" th:text="${audio.creator.username}"></span></span>
+            <form th:action="@{/add-music/{id}(id=${audio.id})}" method="post" style="display: inline;">
+                <button type="submit" class="add-button">Добавить к себе</button>
+            </form>
         </li>
     </ul>
     <div th:if="${#lists.isEmpty(lastAddedMusic)}">

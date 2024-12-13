@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -25,18 +24,37 @@ public class AudioService {
 
     @Transactional
     public List<AudioEntity> listAudioByUser(Principal principal){
-        System.out.println(audioRepository.findAllByUsers(userService.findByLogin(principal).getId()));
         return audioRepository.findAllByUsers(userService.findByLogin(principal).getId());
     }
     @Transactional
+    public List<AudioEntity> listAudioByNameAndGenre(String name, String genre) {
+
+        return audioRepository.findAllByNameAndGenres(name, Genre.valueOf(genre));
+    }
+    @Transactional
+    public List<AudioEntity> listAudioByName(String name){
+        return audioRepository.findAllByName(name);
+    }
+    @Transactional
+    public List<AudioEntity> listAudioByGenre(String genre){
+        System.out.println(genre);
+        System.out.println(Genre.valueOf(genre));
+        System.out.println(genre.equals(Genre.valueOf(genre)));
+        return audioRepository.findAllByGenres(Genre.valueOf(genre));
+    }
+
+    @Transactional
     public List<AudioEntity> listAudioByUserId(Long id){
         return audioRepository.findAllByUsers(userService.findById(id).getId());
+    }
+    @Transactional
+    public List<AudioEntity> findAll(){
+        return audioRepository.findAll();
     }
     public AudioEntity findById(Long id){
         return audioRepository.findById(id).orElse(null);
     }
     public Long countOfAudioByEmail(Principal principal){
-        System.out.println(audioRepository.countByUserId(userService.findByLogin(principal).getId()));
         return audioRepository.countByUserId(userService.findByLogin(principal).getId());
     }
     public Long countOfAudioById(Long id){
@@ -70,14 +88,14 @@ public class AudioService {
         return audioRepository.findByName(name).orElse(null);
     }
 
-    public void addAudioToUser(Principal principal, Long audioId){// todo check on transactional
+    public void addAudioToUser(Principal principal, Long audioId) {
         UserEntity user = userService.findByLogin(principal);
         AudioEntity audio = findById(audioId);
 
         user.getAudios().add(audio);
+        audio.getUsers().add(user);
 
         userService.save(user);
+        saveAudio(audio);
     }
-
-
 }

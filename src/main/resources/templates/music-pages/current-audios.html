@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Музыка - Music App</title>
+  <style>
+    body {
+      background-color: black;
+      color: #00BFFF; /* Голубой цвет */
+      font-family: 'Helvetica Neue', 'Arial', sans-serif;
+      margin: 0;
+      display: flex;
+      height: 100vh;
+    }
+    .sidebar {
+      width: 250px;
+      background-color: #1c1c1c;
+      padding: 20px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar h2 {
+      margin: 0;
+      margin-bottom: 15px;
+      cursor: pointer;
+    }
+    .music-center {
+      flex-grow: 1;
+      padding: 20px;
+      background-color: #2c2c2c;
+      color: white;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+    .music-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 10px; /* Отступ сверху для списка */
+    }
+    .music-list li {
+      margin-bottom: 10px;
+      cursor: pointer; /* Указатель курсора на элементы списка */
+      display: flex; /* Используем flex для горизонтального расположения */
+      justify-content: space-between; /* Распределяем пространство между элементами */
+      align-items: center; /* Центрирование элементов по вертикали */
+    }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <h2 onclick="location.href='/general'">Главная страница</h2>
+  <h2 onclick="location.href='/music'">Вся музыка</h2>
+  <h2 onclick="location.href='/personal-music'">Ваша музыка</h2>
+</div>
+
+<div class="music-center">
+
+  <h2 style="display: flex; align-items: center; margin-bottom: 5px;">
+     Музыка по вашему запросу
+    <div class="controls" id="audioControls" style="display: none;">
+      <span class="play-pause" id="playPauseButton">▶</span>
+      <span class="restart" id="restartButton">🔄</span>
+    </div>
+  </h2>
+  <ul class="music-list">
+    <li th:each="audio : ${currentAudios}">
+            <span th:text="${audio.name}"
+                  th:onclick="'playTrack(\'/audio/stream/' + ${audio.id} + '\')'"
+                  style="cursor: pointer;"></span>
+      <span> by <span th:if="${audio.creator.email == currentUser  .email}">your</span>
+                  <span th:if="${audio.creator.email != currentUser  .email}" th:text="${audio.creator.username}"></span></span>
+      <form th:action="@{/add-music/{id}(id=${audio.id})}" method="post" style="display: inline;">
+        <button type="submit" class="add-button">Добавить к себе</button>
+      </form>
+    </li>
+  </ul>
+  <div th:if="${#lists.isEmpty(currentAudios)}">
+    <p>По вашему запросу ничего не найдено</p>
+    <button class="upload-button" onclick="location.href='/load-audio'">Добавить музыку</button>
+  </div>
+  <audio id="audioPlayer" controls style="display: none;"></audio>
+</div>
+
+
+<script>
+  const audioPlayer = document.getElementById('audioPlayer');
+  const playPauseButton = document.getElementById('playPauseButton');
+  const restartButton = document.getElementById('restartButton');
+  const audioControls = document.getElementById('audioControls');
+  function playTrack(audioUrl) {
+    audioPlayer.src = audioUrl; // Установка источника аудио
+    audioControls.style.display = 'flex'; // Показать элементы управления
+    audioPlayer.play(); // Автоматически воспроизводим трек
+    playPauseButton.textContent = '❚❚'; // Изменить на паузу
+  }
+
+  playPauseButton.addEventListener('click', () => {
+    if (audioPlayer.paused) {
+      audioPlayer.play();
+      playPauseButton.textContent = '❚❚'; // Изменить на паузу
+    } else {
+      audioPlayer.pause();
+      playPauseButton.textContent = '▶'; // Изменить на воспроизведение
+    }
+  });
+
+  restartButton.addEventListener('click', () => {
+    audioPlayer.currentTime = 0; // Перезапустить трек
+    audioPlayer.play(); // Запустить воспроизведение
+    playPauseButton.textContent = '❚❚'; // Изменить на паузу
+  });
+</script>
+
+</body>
+</html>

@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.musicApp.api.services.AudioService;
+import org.example.musicApp.api.services.UserService;
 import org.example.musicApp.store.entities.aboutAudio.AudioEntity;
 import org.example.musicApp.store.entities.aboutAudio.Genre;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class MusicController {
     private final AudioService audioService;
+    private final UserService userService;
 
     @Transactional
     @GetMapping("/audio/stream/{id}")
@@ -59,15 +61,27 @@ public class MusicController {
     }
 
     @GetMapping("/music")
-    public String generalMusicPage(Model model){
+    public String generalMusicPage(Model model, Principal principal){
         model.addAttribute("lastAddedMusic", audioService.findTop20ByOrderByCreatedAtDesc());
+        model.addAttribute("currentUser", userService.findByLogin(principal));
         return "music-pages/general-music-page";
     }
 
     @GetMapping("/search-audio")
-    public String searchAudio(@RequestParam String name, Model model){
-        model.addAttribute("currentAudio", audioService.findByName(name));
-        return "music-pages/current-audio";
+    public String searchMusic(@RequestParam(required = false) String name,
+                              @RequestParam(required = false) String genre,
+                              Model model,
+                              Principal principal){
+
+        if(name != "" && genre != "") {
+            model.addAttribute("currentAudios", audioService.listAudioByNameAndGenre(name, genre));
+        } else if (name != "" && genre == "") {
+            model.addAttribute("currentAudios", audioService.listAudioByName(name));
+        } else if (name == "" && genre != ""){
+            model.addAttribute("currentAudios", audioService.listAudioByGenre(genre));
+        } else model.addAttribute("currentAudios", audioService.findAll());
+        model.addAttribute("currentUser", userService.findByLogin(principal));
+        return "music-pages/current-audios";
     }
 
     @GetMapping("/personal-music")
@@ -82,10 +96,10 @@ public class MusicController {
         return "music-pages/user-music";
     }
 
-    @PutMapping("/add-music/{id}")
+    @PostMapping("/add-music/{id}")
     public String addMusic(Principal principal, @PathVariable Long id){
         audioService.addAudioToUser(principal, id);
-        return " ";//todo
+        return "redirect:/music";
     }
 
 }
