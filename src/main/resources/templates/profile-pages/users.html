@@ -26,6 +26,20 @@
             margin-bottom: 15px;
             cursor: pointer;
         }
+        .upload-button {
+            background-color: #00BFFF; /* Синий цвет */
+            color: white;
+            border: none;
+            border-radius: 5px; /* Скругление углов */
+            padding: 15px; /* Увеличение высоты кнопки */
+            cursor: pointer;
+            font-size: 16px; /* Увеличение шрифта */
+            width: 100%; /* Ширина кнопки на всю ширину контейнера */
+            box-sizing: border-box; /* Учитывать padding в ширине */
+        }
+        .upload-button:hover {
+            background-color: #008CBA; /* Цвет при наведении */
+        }
         .music-center {
             flex-grow: 1;
             padding: 20px;
@@ -83,6 +97,18 @@
             margin-left: 5px; /* Уменьшенный отступ между кнопками */
             cursor: pointer;
         }
+        .playlist-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 10px; /* Отступ сверху для списка плейлистов */
+        }
+        /* Новый стиль для заголовка "Ваши плейлисты" */
+        .playlist-title {
+            font-size: 16px; /* Уменьшен размер шрифта */
+            color: white; /* Цвет шрифта белый */
+            margin-top: 20px; /* Отступ сверху */
+            margin-bottom: 10px; /* Отступ снизу */
+        }
     </style>
 </head>
 <body>
@@ -90,59 +116,28 @@
 <div class="sidebar">
     <h2 onclick="location.href='/general'">Главная страница</h2>
     <h2 onclick="location.href='/music'">Вся музыка</h2>
-    <h2 onclick="location.href='/personal-music'">Ваша музыка</h2>
+    <br>
+    <br>
+    <button class="upload-button" onclick="location.href='/load-audio'">Загрузить аудио</button>
 </div>
 
 <div class="music-center">
     <h2 style="display: flex; align-items: center; margin-bottom: 5px;">
-        Список треков
-        <div class="controls" id="audioControls" style="display: none;">
-            <span class="play-pause" id="playPauseButton">▶</span>
-            <span class="restart" id="restartButton">🔄</span>
-        </div>
+        Все пользователи
     </h2>
     <ul class="music-list">
-        <li th:each="audio : ${listOfAudio}">
-        <span th:text="${audio.name}"
-              th:onclick="'playTrack(\'/audio/stream/' + ${audio.id} + '\')'"
-              style="cursor: pointer;"></span>
+        <li th:each="user : ${users}">
+            <span th:text="${audio.name}"
+                  th:onclick="'playTrack(\'/audio/stream/' + ${audio.id} + '\')'"
+                  style="cursor: pointer;"></span>
         </li>
     </ul>
     <div th:if="${#lists.isEmpty(listOfAudio)}">
-        <p>У пользователя не ни одного трека</p>
+        <p>Вы не добавили ни одной музыки, самое время загрузить!</p>
     </div>
+
     <audio id="audioPlayer" controls style="display: none;"></audio>
 </div>
-
-<script>
-    const audioPlayer = document.getElementById('audioPlayer');
-    const playPauseButton = document.getElementById('playPauseButton');
-    const restartButton = document.getElementById('restartButton');
-    const audioControls = document.getElementById('audioControls');
-
-    function playTrack(audioUrl) {
-        audioPlayer.src = audioUrl; // Установка источника аудио
-        audioControls.style.display = 'flex'; // Показать элементы управления
-        audioPlayer.play(); // Автоматически воспроизводим трек
-        playPauseButton.textContent = '❚❚'; // Изменить на паузу
-    }
-
-    playPauseButton.addEventListener('click', () => {
-        if (audioPlayer.paused) {
-            audioPlayer.play();
-            playPauseButton.textContent = '❚❚'; // Изменить на паузу
-        } else {
-            audioPlayer.pause();
-            playPauseButton.textContent = '▶'; // Изменить на воспроизведение
-        }
-    });
-
-    restartButton.addEventListener('click', () => {
-        audioPlayer.currentTime = 0; // Перезапустить трек
-        audioPlayer.play(); // Запустить воспроизведение
-        playPauseButton.textContent = '❚❚'; // Изменить на паузу
-    });
-</script>
 
 </body>
 </html>

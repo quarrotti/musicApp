@@ -9,9 +9,6 @@ import org.example.musicApp.store.entities.common.ImageEntity;
 import org.example.musicApp.store.repositories.ImageRepository;
 import org.example.musicApp.store.repositories.UserRepository;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +25,10 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final ImageRepository imageRepository;
 
+
+    public List<UserEntity> findAll(){
+        return userRepository.findAll();
+    }
     @Transactional
     public void createUser(UserDto userDto, MultipartFile imageFile) throws IOException{
         if (userRepository.existsByEmail(userDto.getEmail())) {
@@ -65,7 +66,7 @@ public class UserService {
 
     public void editPersonalProfile(UserDto user, Principal principal){
         UserEntity updateUser = findByLogin(principal);
-        if(user.getUsername() != "") updateUser.setUsername(user.getUsername());
+        if(user.getUsername().equals("")) updateUser.setUsername(user.getUsername());
         userRepository.save(updateUser);
     }
 

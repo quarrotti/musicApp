@@ -24,6 +24,8 @@
             border-radius: 10px;
             text-align: center;
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+            position: relative; /* Для позиционирования кнопки редактирования */
+            width: 300px; /* Ширина контейнера профиля */
         }
         .avatar {
             width: 150px; /* Ширина аватарки */
@@ -68,6 +70,30 @@
         .music-button:hover {
             background-color: #0091cc; /* Цвет кнопки при наведении */
         }
+        .edit-button, .change-image-button {
+            background-color: red; /* Красный цвет кнопки */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 0; /* Меньший отступ для уменьшения высоты */
+            cursor: pointer;
+            font-size: 16px;
+            position: absolute; /* Позиционирование кнопки */
+            left: 0; /* Начало с левой стороны */
+            right: 0; /* Растянуть до правой стороны */
+            width: calc(100% - 20px); /* Ширина кнопки, равная ширине профиля с учетом отступов */
+            margin: 0 auto; /* Центрирование кнопки */
+            transition: background-color 0.3s;
+        }
+        .change-image-button {
+            top: -60px; /* Отступ сверху, чтобы кнопка была над контейнером */
+        }
+        .edit-button {
+            top: -30px; /* Отступ сверху, чтобы кнопка была над контейнером */
+        }
+        .edit-button:hover, .change-image-button:hover {
+            background-color: darkred; /* Цвет кнопки при наведении */
+        }
     </style>
 </head>
 <body>
@@ -75,8 +101,11 @@
 <a class="back-link" href="/general">← Вернуться на главную</a>
 
 <div class="profile-container">
-    <img th:src="@{/personal-avatar}" class="avatar" />
-    <h2 th:text="${currentUser.username}"></h2>
+
+    <button class="change-image-button" onclick="location.href='/personalProfile/change-personal-img'">Поменять изображение профиля</button>
+    <button class="edit-button" onclick="location.href='/personalProfile/edit-username'">Поменять никнейм</button>
+    <img th:src="@{/personal-avatar}" class="avatar"/>
+    <h2 th:text="${currentUser  .username}"></h2>
 
     <div class="stats">
         <div class="stat">
@@ -86,10 +115,5 @@
 
     <button class="music-button" onclick="location.href='/personal-music'">Перейти к вашей музыке</button>
 </div>
-
-<script>
-    // Здесь можно добавить дополнительные скрипты, если они понадобятся
-</script>
-
 </body>
 </html>

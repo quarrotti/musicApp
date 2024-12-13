@@ -6,9 +6,15 @@ import org.example.musicApp.api.dto.ImageDto;
 import org.example.musicApp.store.entities.aboutUser.UserEntity;
 import org.example.musicApp.store.entities.common.ImageEntity;
 import org.example.musicApp.store.repositories.ImageRepository;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.Principal;
 
@@ -30,14 +36,28 @@ public class ImageService {
     }
     @Transactional
     public void changeUserImage(MultipartFile imageFile, Principal principal) throws IOException {
-        ImageEntity imageEntity = new ImageEntity();
+        ImageEntity imageEntity = imageRepository.findByUser(userService.findByLogin(principal));
         imageEntity.setFileName(imageFile.getOriginalFilename());
         imageEntity.setFileType(imageFile.getContentType());
         imageEntity.setData(imageFile.getBytes());
 
-        imageRepository.delete(findByUser(principal));
-
-        imageEntity.setUser(userService.findByLogin(principal));
         imageRepository.save(imageEntity);
+    }
+    @Transactional
+    public ResponseEntity<InputStreamResource> getUserPersonalAvatar(Principal principal) {
+        byte[] avatarData = findByUser(principal).getData();
+
+        if (avatarData == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(avatarData));
+
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=avatar.jpg")
+                .contentType(MediaType.IMAGE_JPEG)
+                .contentLength(avatarData.length)
+                .body(resource);
     }
 }

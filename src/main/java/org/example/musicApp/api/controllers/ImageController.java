@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,23 +26,10 @@ public class ImageController {
     private final UserService userService;
     private final ImageService imageService;
 
-    @Transactional
+
     @GetMapping("/personal-avatar")
     public ResponseEntity<InputStreamResource> getUserPersonalAvatar(Principal principal) {
-        byte[] avatarData = imageService.findByUser(principal).getData();
-
-        if (avatarData == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(avatarData));
-
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=avatar.jpg")
-                .contentType(MediaType.IMAGE_JPEG)
-                .contentLength(avatarData.length)
-                .body(resource);
+        return imageService.getUserPersonalAvatar(principal);
     }
     @Transactional
     @GetMapping("/avatar/{id}")
@@ -60,20 +48,5 @@ public class ImageController {
                 .contentType(MediaType.IMAGE_JPEG)
                 .contentLength(avatarData.length)
                 .body(resource);
-    }
-
-    @GetMapping("/personalProfile/change-personal-img")
-    public String changePersonalImg(){
-        return "profile-pages/change-personal-img";
-    }
-
-    @PutMapping("/change-personal-img")
-    public String changePersonalImg(MultipartFile file, Principal principal){
-        try {
-            imageService.changeUserImage(file, principal);
-        } catch (IOException e) {
-            throw new RuntimeException(e); // todo
-        }
-        return " "; //todo
     }
 }

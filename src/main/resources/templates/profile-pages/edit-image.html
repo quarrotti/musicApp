@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Изменение аватарки</title>
+    <style>
+        body {
+            background-color: black;
+            color: #00BFFF; /* Голубой цвет */
+            font-family: 'Helvetica Neue', 'Arial', sans-serif; /* Похожий на Spotify шрифт */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+            margin-bottom: 20px;
+        }
+        input[type="file"] {
+            margin-bottom: 15px;
+        }
+        button {
+            background-color: #00BFFF; /* Голубой цвет */
+            color: black;
+            border: none;
+            padding: 15px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0099CC; /* Темно-голубой цвет */
+        }
+        .link-container {
+            margin-top: 20px;
+            color: white;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Изменение аватарки</h1>
+
+<!-- Форма для изменения аватарки -->
+<form id="avatarForm" action="/change-personal-img" method="post" enctype="multipart/form-data">
+    <input type="file" id="file-upload" name="file" accept="image/*" required> <!-- Поле для загрузки новой аватарки -->
+    <button type="submit">Сохранить изменения</button>
+</form>
+
+<div class="link-container">
+    <p><a href="/personal-profile" style="color: #00BFFF;">Вернуться в профиль</a></p>
+</div>
+
+</body>
+</html>

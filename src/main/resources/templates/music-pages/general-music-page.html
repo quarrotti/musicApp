@@ -163,7 +163,7 @@
             <span th:text="${audio.name}"
                   th:onclick="'playTrack(\'/audio/stream/' + ${audio.id} + '\')'"
                   style="cursor: pointer;"></span>
-            <span> by <span th:if="${audio.creator.email == currentUser .email}">your</span>
+            <span> from <span th:if="${audio.creator.email == currentUser .email}">you</span>
                   <span th:if="${audio.creator.email != currentUser .email}" th:text="${audio.creator.username}"></span></span>
             <form th:action="@{/add-music/{id}(id=${audio.id})}" method="post" style="display: inline;">
                 <button type="submit" class="add-button">Добавить к себе</button>
