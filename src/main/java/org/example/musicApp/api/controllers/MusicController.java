@@ -102,4 +102,12 @@ public class MusicController {
         return "redirect:/music";
     }
 
+    @PostMapping("/delete-audio/{id}")
+    public String deleteAudio(@PathVariable Long id, Principal principal){
+        if(audioService.findById(id).getCreator().equals(userService.findByLogin(principal))){
+            audioService.deleteById(id);
+            return "redirect:/personal-music";
+        } else return "music-pages/fail-delete";
+    }
+
 }

@@ -37,9 +37,6 @@ public class AudioService {
     }
     @Transactional
     public List<AudioEntity> listAudioByGenre(String genre){
-        System.out.println(genre);
-        System.out.println(Genre.valueOf(genre));
-        System.out.println(genre.equals(Genre.valueOf(genre)));
         return audioRepository.findAllByGenres(Genre.valueOf(genre));
     }
 
@@ -51,9 +48,16 @@ public class AudioService {
     public List<AudioEntity> findAll(){
         return audioRepository.findAll();
     }
+    @Transactional
     public AudioEntity findById(Long id){
         return audioRepository.findById(id).orElse(null);
     }
+
+    public void deleteById(Long id){
+        audioRepository.deleteById(id);
+    }
+
+
     public Long countOfAudioByEmail(Principal principal){
         return audioRepository.countByUserId(userService.findByLogin(principal).getId());
     }
@@ -82,10 +86,6 @@ public class AudioService {
     @Transactional
     public List<AudioEntity> findTop20ByOrderByCreatedAtDesc(){
         return audioRepository.findTop20ByOrderByCreatedAtDesc(PageRequest.of(0,20));
-    }
-    @Transactional
-    public AudioEntity findByName(String name){
-        return audioRepository.findByName(name).orElse(null);
     }
 
     public void addAudioToUser(Principal principal, Long audioId) {

@@ -60,6 +60,10 @@ public class UserService {
         return userRepository.findByEmail(principal.getName()).orElse(null);
     }
     @Transactional
+    public UserEntity findByUsername(String username){
+        return userRepository.findByUsername(username).orElse(null);
+    }
+    @Transactional
     public UserEntity findById(Long id){
         return userRepository.findById(id).orElse(null);
     }

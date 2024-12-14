@@ -21,4 +21,6 @@ public interface AudioRepository extends JpaRepository<AudioEntity, Long> {
     @Query("SELECT a FROM AudioEntity a ORDER BY a.createdAt DESC")
     List<AudioEntity> findTop20ByOrderByCreatedAtDesc(Pageable pageable);
     Optional<AudioEntity> findByName(String name);
+
+    void deleteById(Long id);
 }

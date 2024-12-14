@@ -65,8 +65,16 @@ public class ProfileController {
     }
 
     @GetMapping("/users")
-    public String allUsers(Model model){
+    public String allUsers(Model model,Principal principal){
         model.addAttribute("users", userService.findAll());
+        model.addAttribute("currentUser", userService.findByLogin(principal));
         return "profile-pages/users"; // todo
+    }
+
+    @GetMapping("/search-user")
+    public String searchUser(@RequestParam String username){
+        if(userService.findByUsername(username) != null) {
+            return "redirect:/profile/" + userService.findByUsername(username).getId();
+        } else return "profile-pages/fail-search";
     }
 }

@@ -78,7 +78,14 @@
     <img th:src="@{/avatar/{id}(id=${currentUser.id})}" class="avatar" />
     <h2 th:text="${currentUser.username}"></h2>
 
-    <div class="stats">
+    <div th:if="${currentUser  == null}">
+        <div class="error-message">
+            <h2>Пользователя с таким ником не существует</h2>
+        </div>
+        <a class="back-link" href="/general">← Вернуться на главную</a>
+    </div>
+
+    <div th:if="${currentUser  != null}" class="stats">
         <div class="stat">
             <strong>Количество песен:</strong> <span th:text="${countAudio}"></span>
         </div>
@@ -87,6 +94,7 @@
     <a th:href="@{/user-music/{id}(id=${currentUser .id})}" class="music-button">
         Перейти к музыке пользователя
     </a>
+
 </div>
 
 </body>

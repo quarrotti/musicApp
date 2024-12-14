@@ -56,7 +56,9 @@
         }
         .music-list li {
             margin-bottom: 10px;
-            cursor: pointer; /* Указатель курсора на элементы списка */
+            display: flex; /* Используем flex для горизонтального расположения */
+            justify-content: space-between; /* Разделяем элементы по краям */
+            align-items: center; /* Центрирование по вертикали */
         }
         .search-form {
             display: flex; /* Используем flex для горизонтального расположения */
@@ -109,6 +111,17 @@
             margin-top: 20px; /* Отступ сверху */
             margin-bottom: 10px; /* Отступ снизу */
         }
+        .delete-button {
+            background-color: red; /* Красный цвет для кнопки удаления */
+            color: white;
+            border: none;
+            border-radius: 5px; /* Скругление углов */
+            padding: 5px 10px; /* Отступы для кнопки удаления */
+            cursor: pointer;
+        }
+        .delete-button:hover {
+            background-color: darkred; /* Цвет при наведении */
+        }
     </style>
 </head>
 <body>
@@ -122,12 +135,6 @@
 </div>
 
 <div class="music-center">
-    <!-- Форма поиска -->
-    <form action="/search-audio" method="GET" class="search-form">
-        <input type="text" name="query" class="search-input" placeholder="Поиск ваших песен...">
-        <button type="submit" class="search-button">Поиск</button>
-    </form>
-
     <h2 style="display: flex; align-items: center; margin-bottom: 5px;">
         Список треков
         <div class="controls" id="audioControls" style="display: none;">
@@ -140,6 +147,9 @@
             <span th:text="${audio.name}"
                   th:onclick="'playTrack(\'/audio/stream/' + ${audio.id} + '\')'"
                   style="cursor: pointer;"></span>
+            <form th:action="@{/delete-audio/{id}(id=${audio.id})}" method="post" style="display: inline;">
+                <button type="submit" class="delete-button">Удалить</button>
+            </form>
         </li>
     </ul>
     <div th:if="${#lists.isEmpty(listOfAudio)}">

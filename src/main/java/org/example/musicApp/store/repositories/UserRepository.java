@@ -15,6 +15,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query("SELECT u FROM UserEntity u ORDER BY SIZE(u.audios) DESC")
     List<UserEntity> findTop10UsersByAudioCount(Pageable pageable);
 
+    Optional<UserEntity> findByUsername(String username);
+
 
 
 }
